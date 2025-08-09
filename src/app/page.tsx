@@ -1,16 +1,15 @@
 'use client'
 
 import React, { useState } from 'react';
-import { FileText, Search, Home } from 'lucide-react';
+import { Plus, Filter, Home } from 'lucide-react';
 import { useProperties } from '../hooks/useProperties';
 import { useFilters } from '../hooks/useFilters';
 import { PropertyForm } from '../components/PropertyForm';
 import { SearchFilters } from '../components/SearchFilters';
 import { PropertyList } from '../components/PropertyList';
-import { Navigation } from '../components/Navigation';
 
 export default function HomePage() {
-  const [currentSection, setCurrentSection] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
   
   // Custom hooks for state management (now with database!)
   const { properties, loading, error, addProperty } = useProperties();
@@ -19,10 +18,10 @@ export default function HomePage() {
   // Show loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading properties...</p>
+          <p className="text-gray-600">Loading properties...</p>
         </div>
       </div>
     );
@@ -31,13 +30,13 @@ export default function HomePage() {
   // Show error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-        <div className="text-center bg-white/80 p-8 rounded-2xl shadow-sm border border-red-200">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-lg shadow-sm border border-red-200 max-w-md">
           <div className="text-red-500 text-xl mb-4">⚠️ Database Error</div>
-          <p className="text-slate-600 mb-4">{error}</p>
+          <p className="text-gray-600 mb-4">{error}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
           >
             Retry
           </button>
@@ -46,67 +45,76 @@ export default function HomePage() {
     );
   }
 
+  const tabs = [
+    { name: 'Add Property', icon: Plus, id: 'add' },
+    { name: 'Search & Filter', icon: Filter, id: 'search' },
+    { name: 'Portfolio', icon: Home, id: 'portfolio' }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="text-center py-8 relative z-10">
-        <h1 className="text-3xl font-light text-slate-700 mb-2">Real Estate Asset Tracker</h1>
-        <p className="text-slate-500 font-light text-sm">Manage your property portfolio with ease</p>
-        <div className="text-xs text-slate-400 mt-2 flex items-center justify-center gap-2">
-          <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
-          <span>Connected to database • {properties.length} properties</span>
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="py-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Real Estate Asset Tracker</h1>
+                <p className="text-gray-600 mt-1">Manage your property portfolio efficiently</p>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span>{properties.length} properties</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Navigation Component */}
-      <Navigation 
-        currentSection={currentSection} 
-        onSectionChange={setCurrentSection}
-      />
-
-      {/* Main Carousel Container */}
-      <div className="relative h-[calc(100vh-140px)] overflow-hidden">
-        {/* Section Title - Shows only current section's title */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30">
-          {currentSection === 0 && (
-            <div className="flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40">
-              <div className="w-7 h-7 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mr-3">
-                <FileText className="w-3.5 h-3.5 text-white" />
-              </div>
-              <h2 className="text-lg font-medium text-slate-600">Property Input</h2>
-            </div>
-          )}
-          
-          {currentSection === 1 && (
-            <div className="flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40">
-              <div className="w-7 h-7 bg-gradient-to-r from-violet-400 to-purple-500 rounded-lg flex items-center justify-center mr-3">
-                <Search className="w-3.5 h-3.5 text-white" />
-              </div>
-              <h2 className="text-lg font-medium text-slate-600">Search & Filter</h2>
-            </div>
-          )}
-          
-          {currentSection === 2 && (
-            <div className="flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40">
-              <div className="w-7 h-7 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
-                <Home className="w-3.5 h-3.5 text-white" />
-              </div>
-              <h2 className="text-lg font-medium text-slate-600">Property Portfolio</h2>
-            </div>
-          )}
+      {/* Navigation Tabs */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <nav className="flex space-x-8">
+            {tabs.map((tab, index) => (
+              <button
+                key={index}
+                onClick={() => setActiveTab(index)}
+                className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
+                  activeTab === index
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                <tab.icon className="w-5 h-5" />
+                {tab.name}
+              </button>
+            ))}
+          </nav>
         </div>
+      </div>
 
-        <div
-          className="flex transition-transform duration-500 ease-out h-full pt-14"
-          style={{ transform: `translateX(-${currentSection * 100}%)` }}
-        >
-          {/* Section 1: Add Property */}
-          <div className="w-screen flex-shrink-0 px-8 flex items-center justify-center">
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Add Property Tab */}
+        {activeTab === 0 && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Add New Property</h2>
             <PropertyForm onAddProperty={addProperty} />
           </div>
+        )}
 
-          {/* Section 2: Search & Filters */}
-          <div className="w-screen flex-shrink-0 px-8 flex items-center justify-center">
+        {/* Search & Filter Tab */}
+        {activeTab === 1 && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">Search & Filter Properties</h2>
+              <button
+                onClick={clearFilters}
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+              >
+                Clear All Filters
+              </button>
+            </div>
             <SearchFilters
               filters={filters}
               onFilterChange={updateFilter}
@@ -114,12 +122,20 @@ export default function HomePage() {
               resultCount={filteredProperties.length}
             />
           </div>
+        )}
 
-          {/* Section 3: Property Portfolio */}
-          <div className="w-screen flex-shrink-0 px-8 flex items-center justify-center">
+        {/* Portfolio Tab */}
+        {activeTab === 2 && (
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold text-gray-900">Property Portfolio</h2>
+              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                {filteredProperties.length} properties
+              </span>
+            </div>
             <PropertyList properties={filteredProperties} />
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
