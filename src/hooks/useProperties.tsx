@@ -16,6 +16,9 @@ const convertToProperty = (dbProperty: DatabaseProperty): Property => ({
   sqft: dbProperty.sqft,
   status: dbProperty.status,
   agent: dbProperty.agent || '',
+  ownerName: dbProperty.owner_name || '',
+  ownerPhone: dbProperty.owner_phone || '',
+  comments: dbProperty.comments || '',
   dateAdded: new Date(dbProperty.created_at).toISOString().split('T')[0]
 });
 
@@ -29,7 +32,10 @@ const convertToDbProperty = (formData: PropertyFormData) => ({
   bathrooms: parseInt(formData.bathrooms) || 0,
   sqft: parseInt(formData.sqft) || 0,
   status: formData.status,
-  agent: formData.agent || null
+  agent: formData.agent || null,
+  owner_name: formData.ownerName || null,
+  owner_phone: formData.ownerPhone || null,
+  comments: formData.comments || null
 });
 
 export const useProperties = () => {
@@ -103,6 +109,9 @@ export const useProperties = () => {
       if (updates.sqft !== undefined) dbUpdates.sqft = updates.sqft;
       if (updates.status) dbUpdates.status = updates.status;
       if (updates.agent !== undefined) dbUpdates.agent = updates.agent;
+      if (updates.ownerName !== undefined) dbUpdates.owner_name = updates.ownerName;
+      if (updates.ownerPhone !== undefined) dbUpdates.owner_phone = updates.ownerPhone;
+      if (updates.comments !== undefined) dbUpdates.comments = updates.comments;
 
       const { error } = await supabase
         .from('properties')

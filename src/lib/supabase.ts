@@ -19,5 +19,8 @@ export interface DatabaseProperty {
   sqft: number;
   status: 'Available' | 'Pending' | 'Sold' | 'Off Market';
   agent: string | null;
+  owner_name: string | null;
+  owner_phone: string | null;
+  comments: string | null;
   created_at: string;
 }

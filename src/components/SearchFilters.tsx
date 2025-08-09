@@ -18,7 +18,21 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   resultCount
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    onFilterChange(e.target.name as keyof PropertyFilters, e.target.value);
+    const { name, value } = e.target;
+    
+    // Apply validation for numeric fields
+    let validatedValue = value;
+    if (['minPrice', 'maxPrice', 'minBedrooms'].includes(name)) {
+      // Remove any non-numeric characters
+      validatedValue = value.replace(/[^0-9]/g, '');
+      
+      // Ensure non-negative
+      if (parseInt(validatedValue) < 0) {
+        validatedValue = '0';
+      }
+    }
+    
+    onFilterChange(name as keyof PropertyFilters, validatedValue);
   };
 
   return (
@@ -33,6 +47,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Search */}
         <div className="lg:col-span-2">
           <label className="block text-sm font-medium text-slate-600 mb-2">Search</label>
           <div className="relative">
@@ -43,15 +58,16 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               value={filters.searchTerm}
               onChange={handleInputChange}
               className="w-full pl-10 pr-3.5 py-2.5 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400 transition-all bg-white/80 text-slate-700"
-              placeholder="Search by address or agent..."
+              placeholder="Search by address, agent, or owner..."
             />
           </div>
         </div>
 
+        {/* Min Price */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Min Price</label>
           <input
-            type="number"
+            type="text"
             name="minPrice"
             value={filters.minPrice}
             onChange={handleInputChange}
@@ -60,10 +76,11 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           />
         </div>
 
+        {/* Max Price */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Max Price</label>
           <input
-            type="number"
+            type="text"
             name="maxPrice"
             value={filters.maxPrice}
             onChange={handleInputChange}
@@ -72,6 +89,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           />
         </div>
 
+        {/* Listing Type */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Listing Type</label>
           <select
@@ -86,6 +104,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
+        {/* Property Type */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Property Type</label>
           <select
@@ -103,6 +122,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
+        {/* Min Bedrooms */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Min Bedrooms</label>
           <select
@@ -120,6 +140,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
+        {/* Status */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Status</label>
           <select
@@ -136,6 +157,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
+        {/* Agent */}
         <div>
           <label className="block text-sm font-medium text-slate-600 mb-2">Agent</label>
           <input
@@ -145,6 +167,19 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
             onChange={handleInputChange}
             className="w-full px-3.5 py-2.5 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400 transition-all bg-white/80 text-slate-700"
             placeholder="Agent name..."
+          />
+        </div>
+
+        {/* Owner Name */}
+        <div>
+          <label className="block text-sm font-medium text-slate-600 mb-2">Owner</label>
+          <input
+            type="text"
+            name="ownerName"
+            value={filters.ownerName}
+            onChange={handleInputChange}
+            className="w-full px-3.5 py-2.5 border border-slate-200/80 rounded-xl focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400 transition-all bg-white/80 text-slate-700"
+            placeholder="Owner name..."
           />
         </div>
       </div>

@@ -11,6 +11,9 @@ export interface Property {
   sqft: number;
   status: 'Available' | 'Pending' | 'Sold' | 'Off Market';
   agent: string;
+  ownerName: string;
+  ownerPhone: string;
+  comments: string;
   dateAdded: string;
 }
 
@@ -24,6 +27,9 @@ export interface PropertyFormData {
   sqft: string;
   status: 'Available' | 'Pending' | 'Sold' | 'Off Market';
   agent: string;
+  ownerName: string;
+  ownerPhone: string;
+  comments: string;
 }
 
 export interface PropertyFilters {
@@ -35,6 +41,7 @@ export interface PropertyFilters {
   minBedrooms: string;
   status: string;
   agent: string;
+  ownerName: string;
 }
 
 export interface NavigationSection {

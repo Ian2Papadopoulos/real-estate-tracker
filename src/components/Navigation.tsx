@@ -41,19 +41,19 @@ export const Navigation: React.FC<NavigationProps> = ({
 
   return (
     <>
-      {/* Navigation Arrows */}
+      {/* Navigation Arrows - Enhanced with larger size and hover effects */}
       <button
         onClick={prevSection}
-        className="fixed left-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/40 backdrop-blur-sm text-slate-600 p-2 rounded-full hover:bg-white/60 transition-all duration-200 shadow-sm"
+        className="fixed left-6 top-1/2 transform -translate-y-1/2 z-20 bg-white/40 backdrop-blur-sm text-slate-600 p-4 rounded-full hover:bg-blue-500/90 hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl"
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-8 h-8" />
       </button>
       
       <button
         onClick={nextSection}
-        className="fixed right-4 top-1/2 transform -translate-y-1/2 z-20 bg-white/40 backdrop-blur-sm text-slate-600 p-2 rounded-full hover:bg-white/60 transition-all duration-200 shadow-sm"
+        className="fixed right-6 top-1/2 transform -translate-y-1/2 z-20 bg-white/40 backdrop-blur-sm text-slate-600 p-4 rounded-full hover:bg-blue-500/90 hover:text-white hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-xl"
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="w-8 h-8" />
       </button>
 
       {/* Section Indicators */}

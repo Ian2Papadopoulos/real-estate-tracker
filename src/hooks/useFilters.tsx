@@ -12,13 +12,15 @@ export const useFilters = (properties: Property[]) => {
     type: '',
     minBedrooms: '',
     status: '',
-    agent: ''
+    agent: '',
+    ownerName: ''
   });
 
   const filteredProperties = useMemo(() => {
     return properties.filter(property => {
       const matchesSearch = property.address.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-                           property.agent.toLowerCase().includes(filters.searchTerm.toLowerCase());
+                           property.agent.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+                           property.ownerName.toLowerCase().includes(filters.searchTerm.toLowerCase());
       const matchesMinPrice = !filters.minPrice || property.price >= parseInt(filters.minPrice);
       const matchesMaxPrice = !filters.maxPrice || property.price <= parseInt(filters.maxPrice);
       const matchesListingType = !filters.listingType || property.listingType === filters.listingType;
@@ -26,9 +28,10 @@ export const useFilters = (properties: Property[]) => {
       const matchesMinBedrooms = !filters.minBedrooms || property.bedrooms >= parseInt(filters.minBedrooms);
       const matchesStatus = !filters.status || property.status === filters.status;
       const matchesAgent = !filters.agent || property.agent.toLowerCase().includes(filters.agent.toLowerCase());
+      const matchesOwner = !filters.ownerName || property.ownerName.toLowerCase().includes(filters.ownerName.toLowerCase());
 
       return matchesSearch && matchesMinPrice && matchesMaxPrice && matchesListingType && 
-             matchesType && matchesMinBedrooms && matchesStatus && matchesAgent;
+             matchesType && matchesMinBedrooms && matchesStatus && matchesAgent && matchesOwner;
     });
   }, [properties, filters]);
 
@@ -48,7 +51,8 @@ export const useFilters = (properties: Property[]) => {
       type: '',
       minBedrooms: '',
       status: '',
-      agent: ''
+      agent: '',
+      ownerName: ''
     });
   };
 

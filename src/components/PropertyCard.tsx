@@ -1,7 +1,7 @@
 // src/components/PropertyCard.tsx
 
 import React from 'react';
-import { DollarSign, Home, MapPin, User, Calendar } from 'lucide-react';
+import { DollarSign, Home, MapPin, User, Calendar, Phone, UserCheck, MessageCircle } from 'lucide-react';
 import { Property } from '@/types/property';
 import { formatPrice, formatDate } from '@/utils/formatters';
 
@@ -65,12 +65,35 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           </span>
         </div>
 
-        <div className="flex items-center text-slate-600">
-          <User className="w-4 h-4 mr-3" />
-          <span className="text-sm">{property.agent}</span>
-        </div>
+        {property.agent && (
+          <div className="flex items-center text-slate-600">
+            <User className="w-4 h-4 mr-3" />
+            <span className="text-sm">Agent: {property.agent}</span>
+          </div>
+        )}
 
-        <div className="flex items-center text-slate-500">
+        {property.ownerName && (
+          <div className="flex items-center text-slate-600">
+            <UserCheck className="w-4 h-4 mr-3" />
+            <span className="text-sm">Owner: {property.ownerName}</span>
+          </div>
+        )}
+
+        {property.ownerPhone && (
+          <div className="flex items-center text-slate-600">
+            <Phone className="w-4 h-4 mr-3" />
+            <span className="text-sm">{property.ownerPhone}</span>
+          </div>
+        )}
+
+        {property.comments && (
+          <div className="flex items-start text-slate-600">
+            <MessageCircle className="w-4 h-4 mr-3 mt-0.5 flex-shrink-0" />
+            <span className="text-sm leading-relaxed">{property.comments}</span>
+          </div>
+        )}
+
+        <div className="flex items-center text-slate-500 pt-2 border-t border-slate-100">
           <Calendar className="w-4 h-4 mr-3" />
           <span className="text-xs">Added {formatDate(property.dateAdded)}</span>
         </div>
