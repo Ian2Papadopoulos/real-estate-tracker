@@ -1,103 +1,126 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+import React, { useState } from 'react';
+import { FileText, Search, Home } from 'lucide-react';
+import { useProperties } from '../hooks/useProperties';
+import { useFilters } from '../hooks/useFilters';
+import { PropertyForm } from '../components/PropertyForm';
+import { SearchFilters } from '../components/SearchFilters';
+import { PropertyList } from '../components/PropertyList';
+import { Navigation } from '../components/Navigation';
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+export default function HomePage() {
+  const [currentSection, setCurrentSection] = useState(0);
+  
+  // Custom hooks for state management (now with database!)
+  const { properties, loading, error, addProperty } = useProperties();
+  const { filters, filteredProperties, updateFilter, clearFilters } = useFilters(properties);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading properties...</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+        <div className="text-center bg-white/80 p-8 rounded-2xl shadow-sm border border-red-200">
+          <div className="text-red-500 text-xl mb-4">⚠️ Database Error</div>
+          <p className="text-slate-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 overflow-hidden">
+      {/* Header */}
+      <div className="text-center py-8 relative z-10">
+        <h1 className="text-3xl font-light text-slate-700 mb-2">Real Estate Asset Tracker</h1>
+        <p className="text-slate-500 font-light text-sm">Manage your property portfolio with ease</p>
+        <div className="text-xs text-slate-400 mt-2 flex items-center justify-center gap-2">
+          <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+          <span>Connected to database • {properties.length} properties</span>
+        </div>
+      </div>
+
+      {/* Navigation Component */}
+      <Navigation 
+        currentSection={currentSection} 
+        onSectionChange={setCurrentSection}
+      />
+
+      {/* Main Carousel Container */}
+      <div className="relative h-[calc(100vh-140px)] overflow-hidden">
+        {/* Section Title - Shows only current section's title */}
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-30">
+          {currentSection === 0 && (
+            <div className="flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40">
+              <div className="w-7 h-7 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center mr-3">
+                <FileText className="w-3.5 h-3.5 text-white" />
+              </div>
+              <h2 className="text-lg font-medium text-slate-600">Property Input</h2>
+            </div>
+          )}
+          
+          {currentSection === 1 && (
+            <div className="flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40">
+              <div className="w-7 h-7 bg-gradient-to-r from-violet-400 to-purple-500 rounded-lg flex items-center justify-center mr-3">
+                <Search className="w-3.5 h-3.5 text-white" />
+              </div>
+              <h2 className="text-lg font-medium text-slate-600">Search & Filter</h2>
+            </div>
+          )}
+          
+          {currentSection === 2 && (
+            <div className="flex items-center bg-white/60 backdrop-blur-md px-5 py-2.5 rounded-full shadow-sm border border-white/40">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
+                <Home className="w-3.5 h-3.5 text-white" />
+              </div>
+              <h2 className="text-lg font-medium text-slate-600">Property Portfolio</h2>
+            </div>
+          )}
+        </div>
+
+        <div
+          className="flex transition-transform duration-500 ease-out h-full pt-14"
+          style={{ transform: `translateX(-${currentSection * 100}%)` }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {/* Section 1: Add Property */}
+          <div className="w-screen flex-shrink-0 px-8 flex items-center justify-center">
+            <PropertyForm onAddProperty={addProperty} />
+          </div>
+
+          {/* Section 2: Search & Filters */}
+          <div className="w-screen flex-shrink-0 px-8 flex items-center justify-center">
+            <SearchFilters
+              filters={filters}
+              onFilterChange={updateFilter}
+              onClearFilters={clearFilters}
+              resultCount={filteredProperties.length}
+            />
+          </div>
+
+          {/* Section 3: Property Portfolio */}
+          <div className="w-screen flex-shrink-0 px-8 flex items-center justify-center">
+            <PropertyList properties={filteredProperties} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
