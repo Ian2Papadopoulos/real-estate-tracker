@@ -11,9 +11,18 @@ import { PropertyList } from '../components/PropertyList';
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState(0);
   
-  // Custom hooks for state management (now with database!)
+  // Custom hooks for state management
   const { properties, loading, error, addProperty } = useProperties();
   const { filters, filteredProperties, updateFilter, clearFilters } = useFilters(properties);
+
+  // Handle successful property addition - switch to portfolio tab
+  const handleAddProperty = async (formData: any) => {
+    const success = await addProperty(formData);
+    if (success) {
+      setActiveTab(2); // Switch to portfolio view after adding
+    }
+    return success;
+  };
 
   // Show loading state
   if (loading) {
@@ -46,9 +55,9 @@ export default function HomePage() {
   }
 
   const tabs = [
-    { name: 'Add Property', icon: Plus, id: 'add' },
-    { name: 'Search & Filter', icon: Filter, id: 'search' },
-    { name: 'Portfolio', icon: Home, id: 'portfolio' }
+    { name: 'Add Property', icon: Plus },
+    { name: 'Search & Filter', icon: Filter },
+    { name: 'Portfolio', icon: Home }
   ];
 
   return (
@@ -99,7 +108,7 @@ export default function HomePage() {
         {activeTab === 0 && (
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Add New Property</h2>
-            <PropertyForm onAddProperty={addProperty} />
+            <PropertyForm onAddProperty={handleAddProperty} />
           </div>
         )}
 
@@ -110,7 +119,7 @@ export default function HomePage() {
               <h2 className="text-xl font-semibold text-gray-900">Search & Filter Properties</h2>
               <button
                 onClick={clearFilters}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm"
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
               >
                 Clear All Filters
               </button>

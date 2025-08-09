@@ -34,7 +34,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
   };
 
   const handleSubmit = async () => {
-    if (isSubmitting) return; // Prevent double submission
+    if (isSubmitting) return;
     
     setIsSubmitting(true);
     
@@ -78,7 +78,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.address}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="123 Main Street, City, State"
           />
         </div>
@@ -94,7 +94,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.price}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="450000"
           />
         </div>
@@ -109,7 +109,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.listingType}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
           >
             <option value="For Sale">For Sale</option>
             <option value="For Rent">For Rent</option>
@@ -126,7 +126,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.type}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
           >
             <option value="House">House</option>
             <option value="Condo">Condo</option>
@@ -147,7 +147,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.bedrooms}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="3"
           />
         </div>
@@ -163,7 +163,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.bathrooms}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="2"
           />
         </div>
@@ -179,7 +179,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.sqft}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="1800"
           />
         </div>
@@ -194,7 +194,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.status}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
           >
             <option value="Available">Available</option>
             <option value="Pending">Pending</option>
@@ -214,7 +214,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.agent}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="John Doe"
           />
         </div>
@@ -230,7 +230,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.ownerName}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="Jane Smith"
           />
         </div>
@@ -246,7 +246,7 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             value={formData.ownerPhone}
             onChange={handleInputChange}
             disabled={isSubmitting}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="(555) 123-4567"
           />
         </div>
@@ -262,17 +262,18 @@ export const PropertyForm: React.FC<PropertyFormProps> = ({ onAddProperty }) => 
             onChange={handleInputChange}
             disabled={isSubmitting}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors disabled:opacity-50 disabled:bg-gray-50"
             placeholder="Additional notes about this property..."
           />
         </div>
       </div>
 
-      <div className="pt-4">
+      {/* Submit Button */}
+      <div className="pt-4 border-t border-gray-200">
         <button
           onClick={handleSubmit}
           disabled={isSubmitting || !formData.address || !formData.price}
-          className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
         >
           {isSubmitting ? (
             <>

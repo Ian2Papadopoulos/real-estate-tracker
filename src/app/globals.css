@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 /* Reset and base styles */
@@ -12,13 +11,12 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
-  letter-spacing: -0.025em;
 }
 
 /* Remove default body background to let component handle it */
@@ -32,29 +30,28 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Enhanced scrollbar for webkit browsers */
+/* Custom scrollbar for webkit browsers */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.3);
-  border-radius: 12px;
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(145deg, #cbd5e1, #94a3b8);
-  border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #c1c1c1;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(145deg, #94a3b8, #64748b);
+  background: #a8a8a8;
 }
 
-/* Custom scrollbar for containers - more subtle and modern */
+/* Custom scrollbar for property list - discrete grey pill */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -62,20 +59,19 @@ html {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(145deg, rgba(148, 163, 184, 0.3), rgba(148, 163, 184, 0.5));
-  border-radius: 16px;
+  background: rgba(148, 163, 184, 0.2); /* more subtle */
+  border-radius: 12px; /* more pill-like */
   border: none;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(145deg, rgba(148, 163, 184, 0.5), rgba(148, 163, 184, 0.7));
+  background: rgba(148, 163, 184, 0.3);
 }
 
-/* Enhanced focus styles for better accessibility - maintain rounded corners */
+/* Focus styles for better accessibility */
 *:focus {
-  outline: 3px solid rgba(59, 130, 246, 0.4);
+  outline: 2px solid #3b82f6;
   outline-offset: 2px;
-  border-radius: inherit;
 }
 
 /* Remove focus outline for mouse users */
@@ -83,131 +79,12 @@ html {
   outline: none;
 }
 
-/* Ensure buttons maintain rounded corners in all states */
-button {
-  border-radius: inherit !important;
-}
-
-button:focus,
-button:active,
-button:hover {
-  border-radius: inherit !important;
-}
-
-/* Special focus handling for rounded buttons */
-.rounded-full:focus {
-  border-radius: 9999px !important;
-}
-
-.rounded-full:active {
-  border-radius: 9999px !important;
-}
-
-/* Typography harmony */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.3;
-}
-
-/* Consistent label styling */
-label {
-  font-weight: 500;
-  letter-spacing: -0.01em;
-}
-
-/* Modern input and button styles */
+/* Ensure input and button styles work well */
 input, select, button, textarea {
   font-family: inherit;
-  letter-spacing: inherit;
-}
-
-/* Button typography */
-button {
-  font-weight: 500;
-  letter-spacing: -0.01em;
 }
 
 /* Prevent text selection on buttons */
 button {
   user-select: none;
-}
-
-/* Enhanced backdrop blur support */
-@supports (backdrop-filter: blur(16px)) {
-  .backdrop-blur-xl {
-    backdrop-filter: blur(16px);
-  }
-  
-  .backdrop-blur-lg {
-    backdrop-filter: blur(12px);
-  }
-  
-  .backdrop-blur-md {
-    backdrop-filter: blur(8px);
-  }
-  
-  .backdrop-blur-sm {
-    backdrop-filter: blur(4px);
-  }
-}
-
-/* Custom animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.6s ease-out;
-}
-
-.animate-slideInRight {
-  animation: slideInRight 0.5s ease-out;
-}
-
-/* Glass morphism effect for modern containers */
-.glass-morphism {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-/* Enhanced shadow utilities */
-.shadow-glass {
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.shadow-elevated {
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Modern gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
