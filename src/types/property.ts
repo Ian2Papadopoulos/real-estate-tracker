@@ -41,6 +41,7 @@ export interface PropertyFilters {
   minBedrooms: string;
   status: string;
   agent: string;
+  ownerName: string;
 }
 
 export interface NavigationSection {
