@@ -20,11 +20,9 @@ body {
   line-height: 1.6;
 }
 
-/* Enhanced body with subtle texture */
 body {
-  background: transparent;
-  color: inherit;
-  position: relative;
+  background: #f9fafb;
+  color: #374151;
 }
 
 /* Smooth scrolling */
@@ -32,71 +30,44 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Enhanced scrollbar styling */
+/* Clean scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(248, 250, 252, 0.8);
+  background: #f3f4f6;
   border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  background: #d1d5db;
   border-radius: 8px;
-  border: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+  background: #9ca3af;
 }
 
-::-webkit-scrollbar-corner {
-  background: rgba(248, 250, 252, 0.8);
-}
-
-/* Custom scrollbar for property containers */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
-  border-radius: 12px;
-  border: none;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.5);
-}
-
-/* Enhanced focus styles */
+/* Focus styles */
 *:focus {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #374151;
   outline-offset: 2px;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
-/* Remove focus outline for mouse users */
 *:focus:not(:focus-visible) {
   outline: none;
 }
 
-/* Focus visible for keyboard navigation */
 *:focus-visible {
-  outline: 2px solid #6366f1;
+  outline: 2px solid #374151;
   outline-offset: 2px;
-  border-radius: 8px;
+  border-radius: 4px;
 }
 
-/* Enhanced input and form element styling */
+/* Form element styling */
 input, select, button, textarea {
   font-family: inherit;
   transition: all 0.2s ease-in-out;
@@ -116,182 +87,13 @@ button:not(:disabled):active {
   transform: translateY(0);
 }
 
-/* Enhanced backdrop blur support */
-.backdrop-blur-sm {
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* Custom gradient animations */
-@keyframes gradient-x {
-  0%, 100% {
-    transform: translateX(0%);
-  }
-  50% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes gradient-y {
-  0%, 100% {
-    transform: translateY(0%);
-  }
-  50% {
-    transform: translateY(100%);
-  }
-}
-
-@keyframes gradient-xy {
-  0%, 100% {
-    transform: translate(0%, 0%);
-  }
-  25% {
-    transform: translate(100%, 0%);
-  }
-  50% {
-    transform: translate(100%, 100%);
-  }
-  75% {
-    transform: translate(0%, 100%);
-  }
-}
-
-/* Animated gradient backgrounds */
-.animate-gradient-x {
-  animation: gradient-x 3s ease infinite;
-}
-
-.animate-gradient-y {
-  animation: gradient-y 3s ease infinite;
-}
-
-.animate-gradient-xy {
-  animation: gradient-xy 6s ease infinite;
-}
-
-/* Enhanced loading animation */
-@keyframes pulse-soft {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.7;
-    transform: scale(1.02);
-  }
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2s ease-in-out infinite;
-}
-
-/* Card hover effects */
-.group:hover .card-hover-scale {
-  transform: scale(1.02);
-}
-
 /* Text selection styling */
 ::selection {
-  background-color: rgba(99, 102, 241, 0.2);
-  color: #1e293b;
+  background-color: rgba(55, 65, 81, 0.1);
+  color: #111827;
 }
 
 ::-moz-selection {
-  background-color: rgba(99, 102, 241, 0.2);
-  color: #1e293b;
-}
-
-/* Enhanced shadow utilities */
-.shadow-soft {
-  box-shadow: 0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04);
-}
-
-.shadow-soft-lg {
-  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-/* Glass morphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.glass-dark {
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Enhanced transitions */
-.transition-all-300 {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.transition-transform-300 {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Responsive text scaling */
-@media (max-width: 640px) {
-  html {
-    font-size: 14px;
-  }
-}
-
-@media (min-width: 1024px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .bg-white\/80 {
-    background-color: rgba(255, 255, 255, 0.95);
-  }
-  
-  .border-slate-200\/50 {
-    border-color: rgba(148, 163, 184, 0.8);
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Print styles */
-@media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
-  
-  .shadow-lg,
-  .shadow-xl,
-  .shadow-2xl {
-    box-shadow: none !important;
-  }
-  
-  .bg-gradient-to-r,
-  .bg-gradient-to-l,
-  .bg-gradient-to-t,
-  .bg-gradient-to-b,
-  .bg-gradient-to-br,
-  .bg-gradient-to-bl,
-  .bg-gradient-to-tr,
-  .bg-gradient-to-tl {
-    background-image: none !important;
-    background-color: #f8fafc !important;
-  }
+  background-color: rgba(55, 65, 81, 0.1);
+  color: #111827;
 }

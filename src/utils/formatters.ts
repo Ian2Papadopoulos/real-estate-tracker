@@ -8,7 +8,7 @@ export const formatPrice = (price: number, listingType: string): string => {
     maximumFractionDigits: 0,
   }).format(price);
   
-  return listingType === 'For Rent' ? `${formattedPrice}/month` : formattedPrice;
+  return listingType === 'For Rent' ? `${formattedPrice}/mo` : formattedPrice;
 };
 
 export const formatDate = (dateString: string): string => {

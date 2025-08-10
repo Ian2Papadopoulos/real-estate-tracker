@@ -1,20 +1,618 @@
 'use client'
 
-import React, { useState } from 'react';
-import { Plus, Filter, Home } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Plus, Filter, Home, Search, MapPin, DollarSign, Bed, Bath, Square, User, Phone, MessageSquare, Building, Eye, Edit3, Trash2 } from 'lucide-react';
 import { useProperties } from '../hooks/useProperties';
 import { useFilters } from '../hooks/useFilters';
-import { PropertyForm } from '../components/PropertyForm';
-import { SearchFilters } from '../components/SearchFilters';
-import { PropertyList } from '../components/PropertyList';
 
+// Types (keeping your existing types but ensuring compatibility)
+interface PropertyFormData {
+  address: string;
+  price: string;
+  listingType: 'For Sale' | 'For Rent';
+  type: 'House' | 'Condo' | 'Apartment' | 'Townhouse' | 'Commercial';
+  bedrooms: string;
+  bathrooms: string;
+  sqft: string;
+  status: 'Available' | 'Pending' | 'Sold' | 'Off Market';
+  agent: string;
+  ownerName: string;
+  ownerPhone: string;
+  comments: string;
+}
+
+// Tab Navigation Component
+const TabNavigation = ({ activeTab, setActiveTab, tabs, resultCount }) => (
+  <nav className="border-b border-gray-200 bg-white">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="flex justify-center space-x-8">
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveTab(index)}
+            className={`flex items-center gap-3 py-4 px-6 text-sm font-medium transition-all duration-200 relative ${
+              activeTab === index
+                ? 'text-gray-900 border-b-2 border-gray-900'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <div className={`p-2 rounded-lg transition-all duration-200 ${
+              activeTab === index 
+                ? 'bg-gray-900 text-white' 
+                : 'bg-gray-100 text-gray-600'
+            }`}>
+              <tab.icon className="w-4 h-4" />
+            </div>
+            {tab.name}
+            {index === 2 && resultCount > 0 && (
+              <span className="ml-2 bg-gray-900 text-white text-xs px-2 py-1 rounded-full">
+                {resultCount}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
+  </nav>
+);
+
+// Property Form Component
+const PropertyForm = ({ onAddProperty }) => {
+  const [formData, setFormData] = useState<PropertyFormData>({
+    address: '',
+    price: '',
+    listingType: 'For Sale',
+    type: 'House',
+    bedrooms: '',
+    bathrooms: '',
+    sqft: '',
+    status: 'Available',
+    agent: '',
+    ownerName: '',
+    ownerPhone: '',
+    comments: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleInputChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async () => {
+    if (isSubmitting || !formData.address || !formData.price) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      await onAddProperty(formData);
+      
+      // Reset form
+      setFormData({
+        address: '',
+        price: '',
+        listingType: 'For Sale',
+        type: 'House',
+        bedrooms: '',
+        bathrooms: '',
+        sqft: '',
+        status: 'Available',
+        agent: '',
+        ownerName: '',
+        ownerPhone: '',
+        comments: ''
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const inputClass = "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors";
+  const labelClass = "block text-sm font-medium text-gray-700 mb-2";
+
+  return (
+    <div className="space-y-8">
+      {/* Property Details */}
+      <section className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-gray-900 rounded-lg text-white">
+            <Building className="w-5 h-5" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">Property Details</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2">
+            <label className={labelClass}>
+              <MapPin className="w-4 h-4 inline mr-1" />
+              Property Address *
+            </label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Enter property address"
+              required
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <DollarSign className="w-4 h-4 inline mr-1" />
+              Price *
+            </label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Enter price"
+              required
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Listing Type</label>
+            <select name="listingType" value={formData.listingType} onChange={handleInputChange} className={inputClass}>
+              <option value="For Sale">For Sale</option>
+              <option value="For Rent">For Rent</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>Property Type</label>
+            <select name="type" value={formData.type} onChange={handleInputChange} className={inputClass}>
+              <option value="House">House</option>
+              <option value="Condo">Condo</option>
+              <option value="Apartment">Apartment</option>
+              <option value="Townhouse">Townhouse</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>Status</label>
+            <select name="status" value={formData.status} onChange={handleInputChange} className={inputClass}>
+              <option value="Available">Available</option>
+              <option value="Pending">Pending</option>
+              <option value="Sold">Sold</option>
+              <option value="Off Market">Off Market</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <Bed className="w-4 h-4 inline mr-1" />
+              Bedrooms
+            </label>
+            <input
+              type="number"
+              name="bedrooms"
+              value={formData.bedrooms}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Number of bedrooms"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <Bath className="w-4 h-4 inline mr-1" />
+              Bathrooms
+            </label>
+            <input
+              type="number"
+              name="bathrooms"
+              value={formData.bathrooms}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Number of bathrooms"
+              step="0.5"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <Square className="w-4 h-4 inline mr-1" />
+              Square Feet
+            </label>
+            <input
+              type="number"
+              name="sqft"
+              value={formData.sqft}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Total square footage"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Information */}
+      <section className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-gray-900 rounded-lg text-white">
+            <User className="w-5 h-5" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">Contact Information</h3>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className={labelClass}>
+              <User className="w-4 h-4 inline mr-1" />
+              Agent Name
+            </label>
+            <input
+              type="text"
+              name="agent"
+              value={formData.agent}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Listing agent name"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <User className="w-4 h-4 inline mr-1" />
+              Owner Name
+            </label>
+            <input
+              type="text"
+              name="ownerName"
+              value={formData.ownerName}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Property owner name"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <Phone className="w-4 h-4 inline mr-1" />
+              Owner Phone
+            </label>
+            <input
+              type="tel"
+              name="ownerPhone"
+              value={formData.ownerPhone}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Owner phone number"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>
+              <MessageSquare className="w-4 h-4 inline mr-1" />
+              Comments
+            </label>
+            <textarea
+              name="comments"
+              value={formData.comments}
+              onChange={handleInputChange}
+              className={`${inputClass} h-24 resize-none`}
+              placeholder="Additional notes or comments"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Submit Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting || !formData.address || !formData.price}
+          className="bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {isSubmitting ? 'Adding...' : 'Add Property'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Search Filters Component
+const SearchFilters = ({ filters, onFilterChange, onClearFilters, resultCount }) => {
+  const handleInputChange = (e) => {
+    onFilterChange(e.target.name, e.target.value);
+  };
+
+  const inputClass = "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors";
+  const labelClass = "block text-sm font-medium text-gray-700 mb-2";
+
+  const hasActiveFilters = Object.values(filters).some(value => value !== '');
+
+  return (
+    <div className="space-y-6">
+      {/* Search Bar */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="p-2 bg-gray-900 rounded-lg text-white">
+            <Search className="w-5 h-5" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">Search Properties</h3>
+        </div>
+        
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            name="searchTerm"
+            value={filters.searchTerm}
+            onChange={handleInputChange}
+            className={`${inputClass} pl-12`}
+            placeholder="Search by address, agent, or owner..."
+          />
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gray-900 rounded-lg text-white">
+              <Filter className="w-5 h-5" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
+          </div>
+          {hasActiveFilters && (
+            <button
+              onClick={onClearFilters}
+              className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors"
+            >
+              Clear All
+            </button>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div>
+            <label className={labelClass}>Min Price</label>
+            <input
+              type="number"
+              name="minPrice"
+              value={filters.minPrice}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Min price"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Max Price</label>
+            <input
+              type="number"
+              name="maxPrice"
+              value={filters.maxPrice}
+              onChange={handleInputChange}
+              className={inputClass}
+              placeholder="Max price"
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Listing Type</label>
+            <select name="listingType" value={filters.listingType} onChange={handleInputChange} className={inputClass}>
+              <option value="">All Types</option>
+              <option value="For Sale">For Sale</option>
+              <option value="For Rent">For Rent</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>Property Type</label>
+            <select name="type" value={filters.type} onChange={handleInputChange} className={inputClass}>
+              <option value="">All Types</option>
+              <option value="House">House</option>
+              <option value="Condo">Condo</option>
+              <option value="Apartment">Apartment</option>
+              <option value="Townhouse">Townhouse</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>Min Bedrooms</label>
+            <select name="minBedrooms" value={filters.minBedrooms} onChange={handleInputChange} className={inputClass}>
+              <option value="">Any</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+
+          <div>
+            <label className={labelClass}>Status</label>
+            <select name="status" value={filters.status} onChange={handleInputChange} className={inputClass}>
+              <option value="">All Status</option>
+              <option value="Available">Available</option>
+              <option value="Pending">Pending</option>
+              <option value="Sold">Sold</option>
+              <option value="Off Market">Off Market</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Summary */}
+      <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
+        <div className="flex items-center justify-between">
+          <span className="text-gray-700 font-medium">
+            {resultCount === 0 
+              ? "No properties found" 
+              : `${resultCount} ${resultCount === 1 ? 'property' : 'properties'} found`
+            }
+          </span>
+          <div className="bg-gray-900 text-white px-3 py-1 rounded-full text-sm font-medium">
+            {resultCount}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Property Card Component
+const PropertyCard = ({ property }) => {
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'Available': return 'bg-green-100 text-green-800';
+      case 'Pending': return 'bg-yellow-100 text-yellow-800';
+      case 'Sold': return 'bg-blue-100 text-blue-800';
+      case 'Off Market': return 'bg-gray-100 text-gray-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">{property.address}</h3>
+          <p className="text-2xl font-bold text-gray-900">{formatPrice(property.price)}</p>
+          <p className="text-sm text-gray-600">{property.listingType}</p>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(property.status)}`}>
+          {property.status}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Building className="w-4 h-4" />
+            {property.type}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Bed className="w-4 h-4" />
+            {property.bedrooms} bed{property.bedrooms !== 1 ? 's' : ''}
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Bath className="w-4 h-4" />
+            {property.bathrooms} bath{property.bathrooms !== 1 ? 's' : ''}
+          </div>
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Square className="w-4 h-4" />
+            {property.sqft ? `${property.sqft.toLocaleString()} sq ft` : 'N/A'}
+          </div>
+        </div>
+      </div>
+
+      {(property.agent || property.ownerName) && (
+        <div className="border-t border-gray-200 pt-4">
+          <div className="space-y-1">
+            {property.agent && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <User className="w-4 h-4" />
+                <span>Agent: {property.agent}</span>
+              </div>
+            )}
+            {property.ownerName && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <User className="w-4 h-4" />
+                <span>Owner: {property.ownerName}</span>
+              </div>
+            )}
+            {property.ownerPhone && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Phone className="w-4 h-4" />
+                <span>{property.ownerPhone}</span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {property.comments && (
+        <div className="border-t border-gray-200 pt-4 mt-4">
+          <p className="text-sm text-gray-600">{property.comments}</p>
+        </div>
+      )}
+
+      <div className="border-t border-gray-200 pt-4 mt-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-gray-500">Added {property.dateAdded}</span>
+          <div className="flex items-center gap-2">
+            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+              <Eye className="w-4 h-4" />
+            </button>
+            <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+              <Edit3 className="w-4 h-4" />
+            </button>
+            <button className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Property List Component
+const PropertyList = ({ properties }) => {
+  if (properties.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <div className="bg-gray-50 rounded-lg p-12 max-w-md mx-auto">
+          <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-4 flex items-center justify-center">
+            <Home className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">No Properties Found</h3>
+          <p className="text-gray-600">
+            No properties match your current search criteria. Try adjusting your filters.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {properties.map(property => (
+          <PropertyCard key={property.id} property={property} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Main App Component
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState(0);
   
   const { properties, loading, error, addProperty } = useProperties();
   const { filters, filteredProperties, updateFilter, clearFilters } = useFilters(properties);
 
-  const handleAddProperty = async (formData: any) => {
+  const tabs = [
+    { name: 'Add Property', icon: Plus },
+    { name: 'Search & Filter', icon: Filter },
+    { name: 'Portfolio', icon: Home }
+  ];
+
+  const handleAddProperty = async (formData: PropertyFormData) => {
     const success = await addProperty(formData);
     if (success) setActiveTab(2);
     return success;
@@ -22,19 +620,11 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <div className="text-center bg-white/90 backdrop-blur-lg rounded-3xl p-12 shadow-xl border border-slate-200/50 w-full max-w-md transform transition-all duration-500">
-          <div className="relative mb-8">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-indigo-500 mx-auto"></div>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-indigo-400 to-purple-400 opacity-20 animate-pulse"></div>
-          </div>
-          <h2 className="text-xl font-semibold text-slate-800 mb-2">Loading Properties</h2>
-          <p className="text-slate-500 leading-relaxed">Please wait while we fetch your data...</p>
-          <div className="mt-6 flex justify-center space-x-1">
-            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-            <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center bg-white rounded-lg p-12 shadow-lg border border-gray-200 w-full max-w-md">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-gray-900 mx-auto mb-8"></div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Properties</h2>
+          <p className="text-gray-600">Please wait while we fetch your data...</p>
         </div>
       </div>
     );
@@ -42,14 +632,14 @@ export default function HomePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 px-4">
-        <div className="text-center bg-white/90 backdrop-blur-lg p-10 rounded-3xl shadow-xl border border-red-200/50 max-w-md w-full transform transition-all duration-500">
-          <div className="text-red-400 text-5xl mb-6 animate-bounce">⚠️</div>
-          <h2 className="text-xl font-semibold text-slate-800 mb-3">Connection Error</h2>
-          <p className="text-slate-600 mb-6 leading-relaxed">{error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="text-center bg-white p-10 rounded-lg shadow-lg border border-red-200 max-w-md w-full">
+          <div className="text-red-500 text-5xl mb-6">⚠️</div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-3">Connection Error</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
           <button 
             onClick={() => window.location.reload()}
-            className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-6 py-3 rounded-xl text-sm hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 transform hover:scale-105 hover:shadow-lg font-medium"
+            className="bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
             Try Again
           </button>
@@ -58,139 +648,88 @@ export default function HomePage() {
     );
   }
 
-  const tabs = [
-    { name: 'Add Property', icon: Plus, color: 'from-emerald-400 to-teal-400', accent: 'emerald' },
-    { name: 'Search & Filter', icon: Filter, color: 'from-blue-400 to-indigo-400', accent: 'blue' },
-    { name: 'Portfolio', icon: Home, color: 'from-purple-400 to-pink-400', accent: 'purple' }
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
-      
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-200 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-indigo-200 to-transparent rounded-full blur-3xl"></div>
-      </div>
-
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="relative bg-white/80 backdrop-blur-sm border-b border-slate-200/60 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
-          <div className="transition-all duration-300 hover:scale-[1.02]">
-            <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-slate-800 via-slate-700 to-slate-600 bg-clip-text text-transparent">
-              Real Estate Portfolio
-            </h1>
-            <p className="text-slate-500 text-sm lg:text-base mt-2 font-medium">
-              Manage your property investments with elegance
-            </p>
-          </div>
-          <div className="flex items-center gap-3 bg-white/90 backdrop-blur-sm px-5 py-3 rounded-2xl border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-            <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse shadow-lg shadow-emerald-400/50"></div>
-            <span className="text-slate-700 text-sm font-semibold">{properties.length} Properties</span>
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Real Estate Portfolio</h1>
+              <p className="text-gray-600 mt-1">Manage your property investments</p>
+            </div>
+            <div className="flex items-center gap-3 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-gray-700 font-medium">{properties.length} Properties</span>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Navigation Tabs */}
-      <nav className="relative bg-white/60 backdrop-blur-sm border-b border-slate-200/50">
-        <div className="w-full flex justify-center gap-8">
-          {tabs.map((tab, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveTab(index)}
-              className={`flex items-center gap-3 py-5 px-12 text-sm font-medium transition-all duration-300 relative group ${
-                activeTab === index
-                  ? 'text-slate-800 scale-105'
-                  : 'text-slate-500 hover:text-slate-700 hover:scale-102'
-              }`}
-            >
-              <div className={`p-2.5 rounded-xl transition-all duration-300 shadow-md ${
-                activeTab === index 
-                  ? `bg-gradient-to-r ${tab.color} text-white shadow-lg transform scale-110` 
-                  : 'bg-slate-100/80 text-slate-400 group-hover:bg-slate-200/80 group-hover:scale-105'
-              }`}>
-                <tab.icon className="w-4 h-4" />
-              </div>
-              <span className="font-semibold">{tab.name}</span>
-              {activeTab === index && (
-                <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${tab.color} rounded-full shadow-md`}></div>
-              )}
-              {activeTab === index && (
-                <div className={`absolute inset-0 bg-gradient-to-r ${tab.color} opacity-5 rounded-lg`}></div>
-              )}
-            </button>
-          ))}
-        </div>
-      </nav>
+      {/* Navigation */}
+      <TabNavigation 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        tabs={tabs} 
+        resultCount={filteredProperties.length}
+      />
 
-      {/* Main Content - maintaining centered layout */}
-      <main className="relative flex-grow flex items-center justify-center w-full py-16 sm:py-24">
-        <div className="w-full max-w-7xl px-6">
-          
-          {activeTab === 0 && (
-            <section className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-200/60 p-8 sm:p-10 transform hover:scale-[1.01] animate-in slide-in-from-bottom-4 fade-in duration-700">
-              <div className="flex items-center gap-8 mb-8">
-                <div className="p-4 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
-                  <Plus className="w-6 h-6" />
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {activeTab === 0 && (
+          <div className="bg-white rounded-lg border border-gray-200 p-8">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-gray-900 rounded-lg text-white">
+                <Plus className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Add New Property</h2>
+                <p className="text-gray-600">Add a new property to your portfolio</p>
+              </div>
+            </div>
+            <PropertyForm onAddProperty={handleAddProperty} />
+          </div>
+        )}
+
+        {activeTab === 1 && (
+          <div>
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-3 bg-gray-900 rounded-lg text-white">
+                <Filter className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900">Search & Filter Properties</h2>
+                <p className="text-gray-600">Find properties using advanced filters</p>
+              </div>
+            </div>
+            <SearchFilters
+              filters={filters}
+              onFilterChange={updateFilter}
+              onClearFilters={clearFilters}
+              resultCount={filteredProperties.length}
+            />
+          </div>
+        )}
+
+        {activeTab === 2 && (
+          <div>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gray-900 rounded-lg text-white">
+                  <Home className="w-6 h-6" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-slate-800">Add New Property</h2>
-                  <p className="text-slate-500 font-medium">Expand your portfolio with a new investment</p>
+                  <h2 className="text-xl font-semibold text-gray-900">Property Portfolio</h2>
+                  <p className="text-gray-600">Your complete investment overview</p>
                 </div>
               </div>
-              <PropertyForm onAddProperty={handleAddProperty} />
-            </section>
-          )}
-
-          {activeTab === 1 && (
-            <section className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-200/60 p-8 sm:p-10 transform hover:scale-[1.01] animate-in slide-in-from-bottom-4 fade-in duration-700">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-8">
-                  <div className="p-4 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-2xl text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
-                    <Filter className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-800">Search & Filter</h2>
-                    <p className="text-slate-500 font-medium">Find exactly what you're looking for</p>
-                  </div>
-                </div>
-                <button
-                  onClick={clearFilters}
-                  className="text-indigo-600 hover:text-indigo-700 text-sm px-4 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 transition-all duration-200 font-semibold hover:scale-105 border border-indigo-200/50"
-                >
-                  Clear Filters
-                </button>
+              <div className="bg-gray-900 text-white px-4 py-2 rounded-lg font-medium">
+                {filteredProperties.length} {filteredProperties.length === 1 ? 'Property' : 'Properties'}
               </div>
-              <SearchFilters
-                filters={filters}
-                onFilterChange={updateFilter}
-                onClearFilters={clearFilters}
-                resultCount={filteredProperties.length}
-              />
-            </section>
-          )}
-
-          {activeTab === 2 && (
-            <section className="bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 border border-slate-200/60 p-8 sm:p-10 transform hover:scale-[1.01] animate-in slide-in-from-bottom-4 fade-in duration-700 mt-12">
-              <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-8">
-                  <div className="p-4 bg-gradient-to-r from-purple-400 to-pink-400 rounded-2xl text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110">
-                    <Home className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-xl font-bold text-slate-800">Property Portfolio</h2>
-                    <p className="text-slate-500 font-medium">Your complete investment overview</p>
-                  </div>
-                </div>
-                <div className="bg-gradient-to-r from-purple-400 to-pink-400 text-white px-5 py-2.5 rounded-2xl text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  {filteredProperties.length} {filteredProperties.length === 1 ? 'Property' : 'Properties'}
-                </div>
-              </div>
-              <PropertyList properties={filteredProperties} />
-            </section>
-          )}
-
-        </div>
+            </div>
+            <PropertyList properties={filteredProperties} />
+          </div>
+        )}
       </main>
     </div>
   );
